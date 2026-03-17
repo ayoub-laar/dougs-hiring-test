@@ -49,10 +49,7 @@ describe('MovementsService', () => {
     expect(() =>
       service.validate({
         movements: [],
-        balances: [
-          balance('2026-01-31', 1000),
-          balance('2026-01-31', 1500),
-        ],
+        balances: [balance('2026-01-31', 1000), balance('2026-01-31', 1500)],
       }),
     ).toThrow(BadRequestException);
   });
@@ -62,16 +59,16 @@ describe('MovementsService', () => {
     try {
       service.validate({
         movements: [movement(1, '2026-01-15', 'Salary', 3000)],
-        balances: [
-          balance('2026-01-01', 1000),
-          balance('2026-01-31', 3000),
-        ],
+        balances: [balance('2026-01-01', 1000), balance('2026-01-31', 3000)],
       });
     } catch (error) {
       expect(error).toBeInstanceOf(BadRequestException);
       const reasons = getReasonsFromError(error);
       expect(reasons).toHaveLength(1);
-      expect(reasons[0].period).toEqual({ start: '2026-01-01', end: '2026-01-31' });
+      expect(reasons[0].period).toEqual({
+        start: '2026-01-01',
+        end: '2026-01-31',
+      });
       expect(reasons[0].expectedDelta).toBe(2000);
       expect(reasons[0].actualDelta).toBe(3000);
       expect(reasons[0].difference).toBe(1000);
@@ -86,10 +83,7 @@ describe('MovementsService', () => {
           movement(1, '2026-01-15', 'Salary', 3000),
           movement(2, '2026-01-15', 'Salary', 3000),
         ],
-        balances: [
-          balance('2026-01-01', 0),
-          balance('2026-01-31', 3000),
-        ],
+        balances: [balance('2026-01-01', 0), balance('2026-01-31', 3000)],
       });
     } catch (error) {
       expect(error).toBeInstanceOf(BadRequestException);
@@ -134,10 +128,7 @@ describe('MovementsService', () => {
           movement(1, '2026-01-10', 'Coffee', -0.1),
           movement(2, '2026-01-11', 'Coffee', -0.2),
         ],
-        balances: [
-          balance('2026-01-01', 1),
-          balance('2026-01-31', 0.7),
-        ],
+        balances: [balance('2026-01-01', 1), balance('2026-01-31', 0.7)],
       }),
     ).not.toThrow();
   });
@@ -150,10 +141,7 @@ describe('MovementsService', () => {
           movement(2, '2026-01-15', 'In period', 500),
           movement(3, '2026-01-31', 'Same day as end balance', 500),
         ],
-        balances: [
-          balance('2026-01-01', 500),
-          balance('2026-01-31', 1500),
-        ],
+        balances: [balance('2026-01-01', 500), balance('2026-01-31', 1500)],
       }),
     ).not.toThrow();
   });
@@ -166,10 +154,7 @@ describe('MovementsService', () => {
           movement(2, '2026-01-15', 'In period', 500),
           movement(3, '2026-03-01', 'After last checkpoint', 9999),
         ],
-        balances: [
-          balance('2026-01-01', 0),
-          balance('2026-01-31', 500),
-        ],
+        balances: [balance('2026-01-01', 0), balance('2026-01-31', 500)],
       }),
     ).not.toThrow();
   });

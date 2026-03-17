@@ -31,7 +31,9 @@ export class MovementsService {
       (b, i) => i > 0 && b.date === sortedBalances[i - 1].date,
     );
     if (hasDuplicateBalanceDates) {
-      throw new BadRequestException({ message: 'Balances must have unique dates' });
+      throw new BadRequestException({
+        message: 'Balances must have unique dates',
+      });
     }
 
     const reasons: ValidationReason[] = [];
@@ -44,7 +46,11 @@ export class MovementsService {
         isInPeriod(m.date, periodStart.date, periodEnd.date),
       );
 
-      const reason = this.checkPeriod(periodStart, periodEnd, movementsInPeriod);
+      const reason = this.checkPeriod(
+        periodStart,
+        periodEnd,
+        movementsInPeriod,
+      );
       if (reason) reasons.push(reason);
     }
 
@@ -74,7 +80,9 @@ export class MovementsService {
     };
   }
 
-  private findSuspectedDuplicates(movements: MovementDto[]): SuspectedDuplicate[] {
+  private findSuspectedDuplicates(
+    movements: MovementDto[],
+  ): SuspectedDuplicate[] {
     const duplicates: SuspectedDuplicate[] = [];
     const seen = new Map<string, MovementDto>();
 

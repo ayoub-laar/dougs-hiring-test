@@ -2,7 +2,13 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { ValidationReason } from '../src/movements/movements.service';
 import { AppModule } from '../src/app.module';
+
+interface ValidationErrorBody {
+  message: string;
+  reasons: ValidationReason[];
+}
 
 describe('POST /movements/validation', () => {
   let app: INestApplication<App>;
@@ -39,10 +45,12 @@ describe('POST /movements/validation', () => {
   });
 
   it('should return 400 with reasons when movements do not match balance deltas', async () => {
-    const { body } = await request(app.getHttpServer())
+    const response = await request(app.getHttpServer())
       .post('/movements/validation')
       .send({
-        movements: [{ id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 }],
+        movements: [
+          { id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 },
+        ],
         balances: [
           { date: '2026-01-01', balance: 1000 },
           { date: '2026-01-31', balance: 3000 },
@@ -50,6 +58,7 @@ describe('POST /movements/validation', () => {
       })
       .expect(400);
 
+    const body = response.body as ValidationErrorBody;
     expect(body.message).toBe('Validation failed');
     expect(body.reasons).toHaveLength(1);
     expect(body.reasons[0].difference).toBe(1000);
@@ -59,7 +68,9 @@ describe('POST /movements/validation', () => {
     await request(app.getHttpServer())
       .post('/movements/validation')
       .send({
-        movements: [{ id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 }],
+        movements: [
+          { id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 },
+        ],
         balances: [{ date: '2026-01-01', balance: 1000 }],
       })
       .expect(400);
