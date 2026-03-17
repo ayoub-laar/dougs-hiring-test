@@ -45,6 +45,18 @@ describe('MovementsService', () => {
     ).not.toThrow();
   });
 
+  it('should reject when two balances share the same date', () => {
+    expect(() =>
+      service.validate({
+        movements: [],
+        balances: [
+          balance('2026-01-31', 1000),
+          balance('2026-01-31', 1500),
+        ],
+      }),
+    ).toThrow(BadRequestException);
+  });
+
   it('should reject with period details when movements sum does not match the balance delta', () => {
     expect.assertions(6);
     try {

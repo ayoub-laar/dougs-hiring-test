@@ -26,12 +26,12 @@ describe('POST /movements/validation', () => {
       .post('/movements/validation')
       .send({
         movements: [
-          { id: 1, date: '2024-01-15', label: 'Salary', amount: 3000 },
-          { id: 2, date: '2024-01-20', label: 'Rent', amount: -1000 },
+          { id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 },
+          { id: 2, date: '2026-01-20', label: 'Rent', amount: -1000 },
         ],
         balances: [
-          { date: '2024-01-01', balance: 1000 },
-          { date: '2024-01-31', balance: 3000 },
+          { date: '2026-01-01', balance: 1000 },
+          { date: '2026-01-31', balance: 3000 },
         ],
       })
       .expect(200)
@@ -42,10 +42,10 @@ describe('POST /movements/validation', () => {
     const { body } = await request(app.getHttpServer())
       .post('/movements/validation')
       .send({
-        movements: [{ id: 1, date: '2024-01-15', label: 'Salary', amount: 3000 }],
+        movements: [{ id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 }],
         balances: [
-          { date: '2024-01-01', balance: 1000 },
-          { date: '2024-01-31', balance: 3000 },
+          { date: '2026-01-01', balance: 1000 },
+          { date: '2026-01-31', balance: 3000 },
         ],
       })
       .expect(400);
@@ -59,8 +59,8 @@ describe('POST /movements/validation', () => {
     await request(app.getHttpServer())
       .post('/movements/validation')
       .send({
-        movements: [{ id: 1, date: '2024-01-15', label: 'Salary', amount: 3000 }],
-        balances: [{ date: '2024-01-01', balance: 1000 }],
+        movements: [{ id: 1, date: '2026-01-15', label: 'Salary', amount: 3000 }],
+        balances: [{ date: '2026-01-01', balance: 1000 }],
       })
       .expect(400);
   });

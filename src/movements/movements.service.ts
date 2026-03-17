@@ -27,6 +27,13 @@ export class MovementsService {
     const sortedBalances = [...dto.balances].sort(byDate);
     const sortedMovements = [...dto.movements].sort(byDate);
 
+    const hasDuplicateBalanceDates = sortedBalances.some(
+      (b, i) => i > 0 && b.date === sortedBalances[i - 1].date,
+    );
+    if (hasDuplicateBalanceDates) {
+      throw new BadRequestException({ message: 'Balances must have unique dates' });
+    }
+
     const reasons: ValidationReason[] = [];
 
     for (let i = 1; i < sortedBalances.length; i++) {
